@@ -23,11 +23,6 @@
 3. VScodeの Setting.json に　`"git.path": "C:\\opt\\wslgit.exe"` を追記
 
 
-### 参考にしたサイト
-* [[Unity3D] 画面表示を左右反転させる方法](https://blog.fujiu.jp/2015/09/unity3d.html)
-* [KinectでUnityちゃんを動かす](https://qiita.com/yuzupon/items/0123bb6c268a41fcd708)
-* [VScode・WSL・Git導入](https://qiita.com/Philosophistoria/items/48c4779739e6fafc63e0)
-
 ## おおまかなgitの始め方
 1. 頑張ってunityのプロジェクトを置くフォルダまで移動してください。例
 
@@ -87,10 +82,29 @@ $ git fetch upstream
 ```sh
 $ git merge upstream/master
 ```
-3. コンフリクトしたら、修正する
+3. コンフリクト（競合）しなかったら、push。
+```sh
+$ git push
+```
+4. コンフリクトしてしまったら。
+
+なんとか修正してください。
+
+5. 修正したらコミットしてプッシュしてください。
+```sh
+$ git add *
+$ git commit -m "ここにコメント"
+$ git push
+```
 
 これでFork元のリポジトリの最新版に追従できる、はず。<br/>
-これ以降は自分のリモートリポジトリにpushして pull request してください。
+
+6. pull request してください。
+
+### 参考にしたサイト
+* [[Unity3D] 画面表示を左右反転させる方法](https://blog.fujiu.jp/2015/09/unity3d.html)
+* [KinectでUnityちゃんを動かす](https://qiita.com/yuzupon/items/0123bb6c268a41fcd708)
+* [VScode・WSL・Git導入](https://qiita.com/Philosophistoria/items/48c4779739e6fafc63e0)
 
 <br/><br/>
 
