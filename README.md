@@ -36,7 +36,7 @@ $ cd /mnt/c/Users/ユーザー名/unity/
 ```
 2. git の設定
 ```sh
-$ git config --global user.mail "githubに登録したメールアドレス"
+$ git config --global user.email "githubに登録したメールアドレス"
 $ git config --global user.name "githubに登録したユーザー名"
 ```
 ここで、余裕のある人はsshの設定を行ってください。
