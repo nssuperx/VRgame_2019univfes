@@ -12,6 +12,7 @@
 * [Japanese Language Pack for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=MS-CEINTL.vscode-language-pack-ja)
 * [C#](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
 * [Debugger for Unity](https://marketplace.visualstudio.com/items?itemName=Unity.unity-debug)
+* [GitLens — Git supercharged](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
 
 ## Unity 使用アセット
 * [KinectForWindows_UnityPro_2.0.1410](https://developer.microsoft.com/ja-jp/windows/kinect)
