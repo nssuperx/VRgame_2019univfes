@@ -28,6 +28,32 @@
 * [KinectでUnityちゃんを動かす](https://qiita.com/yuzupon/items/0123bb6c268a41fcd708)
 * [VScode・WSL・Git導入](https://qiita.com/Philosophistoria/items/48c4779739e6fafc63e0)
 
+## おおまかなgitの始め方
+1. 頑張ってunityのプロジェクトを置くフォルダまで移動してください。例
+
+```sh
+# wslの人
+$ cd /mnt/c/Users/ユーザー名/unity/
+
+# コマンドプロンプトの人
+> cd unity/
+```
+2. git の設定
+```sh
+$ git config --global user.mail "githubに登録したメールアドレス"
+$ git config --global user.name "githubに登録したユーザー名"
+```
+ここで、余裕のある人はsshの設定を行ってください。
+
+3. **自分**のリポジトリをクローン
+
+```sh
+$ git clone https://github.com/ユーザー名/VRgame_2019univfes.git
+```
+
+この時点でunityのプロジェクトファイルが `/VRgame_2019univfes`以下にできています。<br/>
+Unity Hub でリストに追加すれば開けます。
+
 ## pull request するとき
 はじめに、Fork元のリポジトリの設定をします。
 ```sh
