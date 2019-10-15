@@ -23,6 +23,8 @@
 
 ## <div id="section1">開発環境</div>
 * Unity 2019.1.14f1
+    * Android Build Support
+        * Android SDK & NDK Tools
 * [VScode](https://code.visualstudio.com/)
 * [Kinect for Windows SDK 2.0](https://developer.microsoft.com/ja-jp/windows/kinect)
 
