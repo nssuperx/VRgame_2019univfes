@@ -25,6 +25,10 @@
 * Unity 2019.1.14f1
     * Android Build Support
         * Android SDK & NDK Tools
+
+    Unity 2019.1ではこのモジュールを追加するとAndriod SDK と JDK とかの設定を勝手にしてくれます。<br/>
+    自分でAndroid Studioとかをインストールしたり、パスの設定をする必要はありません。
+
 * [VScode](https://code.visualstudio.com/)
 * [Kinect for Windows SDK 2.0](https://developer.microsoft.com/ja-jp/windows/kinect)
 
