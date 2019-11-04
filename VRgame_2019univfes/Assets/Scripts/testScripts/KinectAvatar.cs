@@ -119,9 +119,10 @@ public class KinectAvatar : MonoBehaviour {
             q = transform.rotation;
             transform.rotation = Quaternion.identity;
 
-            comp2 = Quaternion.AngleAxis(90, new Vector3(0, 1, 0)) *
-                             Quaternion.AngleAxis(-90, new Vector3(0, 0, 1));
+            comp2 = Quaternion.AngleAxis(90, new Vector3(0, 1, 0)) * Quaternion.AngleAxis(-90, new Vector3(0, 0, 1));
+                             
 
+            /*
             Spine1.transform.rotation = SpineMid * comp2;
 
             RightArm.transform.rotation = ElbowRight * comp2;
@@ -138,13 +139,14 @@ public class KinectAvatar : MonoBehaviour {
             LeftUpLeg.transform.rotation = KneeLeft * Quaternion.AngleAxis(-90, new Vector3(0, 0, 1));
 
             LeftLeg.transform.rotation = AnkleLeft * Quaternion.AngleAxis(-90, new Vector3(0, 0, 1));
+            */
 
             // モデルの回転を設定する
             transform.rotation = q;
 
             // モデルの位置を移動する
-            pos = body.Joints[JointType.SpineMid].Position;
-            Ref.transform.position = new Vector3(-pos.X, pos.Y, -pos.Z);
+            //pos = body.Joints[JointType.SpineMid].Position;
+            //Ref.transform.position = new Vector3(-pos.X, pos.Y, -pos.Z);
         }
     }
 
