@@ -10,6 +10,7 @@ using System.Threading;
 
 /*
 *************************************
+このクラスは神クラスです。
 このコードはUDP受信機能も押し込んである。
 *************************************
 */
@@ -134,20 +135,15 @@ public class KinectAvatar : MonoBehaviour {
             }
 
             Spine1.transform.rotation = receiveQuaternion[0];
-
             RightArm.transform.rotation = receiveQuaternion[1];
             RightForeArm.transform.rotation = receiveQuaternion[2];
             RightHand.transform.rotation = receiveQuaternion[3];
-
             LeftArm.transform.rotation = receiveQuaternion[4];
             LeftForeArm.transform.rotation = receiveQuaternion[5];
             LeftHand.transform.rotation = receiveQuaternion[6];
-
             RightUpLeg.transform.rotation = receiveQuaternion[7];
             RightLeg.transform.rotation = receiveQuaternion[8];
-
             LeftUpLeg.transform.rotation = receiveQuaternion[9];
-
             LeftLeg.transform.rotation = receiveQuaternion[10];
 
             /*
