@@ -129,7 +129,7 @@ public class KinectAvatar : MonoBehaviour {
             Quaternion[] receiveQuaternion = new Quaternion[splitText.Length];
             for(int i=0;i<splitText.Length;i++){
                 string[] quaternionStr = splitText[i].Split(',');
-                for(int j=0;j<4;j++){
+                for(int j=0;j<quaternionStr.Length;j++){
                     receiveQuaternion[i][j] = float.Parse(quaternionStr[j]);
                 }
             }
@@ -170,6 +170,7 @@ public class KinectAvatar : MonoBehaviour {
 
             // モデルの位置を移動する
             //pos = body.Joints[JointType.SpineMid].Position;
+            Ref.transform.position = new Vector3(receiveQuaternion[11][0],receiveQuaternion[11][1],-receiveQuaternion[11][2]);
             //Ref.transform.position = new Vector3(-pos.X, pos.Y, -pos.Z);
         }
     }
