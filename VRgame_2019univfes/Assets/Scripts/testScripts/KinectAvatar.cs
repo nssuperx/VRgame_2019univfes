@@ -50,12 +50,14 @@ public class KinectAvatar : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        //飛んできた値を気合でパース
+        //飛んできた値を気合でパースする例文
+        /*
         string[] splitText = rawtext.Split(',');
         Vector3 headPos = new Vector3(
             float.Parse(splitText[0]),
             float.Parse(splitText[1]),
             float.Parse(splitText[2]));
+        */
 
         /*
         //最初に追尾している人のBodyデータを取得する
@@ -87,6 +89,7 @@ public class KinectAvatar : MonoBehaviour {
         Quaternion comp2;
         //CameraSpacePoint pos;
 
+        string[] splitText = rawtext.Split('_');
         
         // 関節の回転を取得する
         if (splitText.Length > 0)
@@ -120,7 +123,32 @@ public class KinectAvatar : MonoBehaviour {
             transform.rotation = Quaternion.identity;
 
             comp2 = Quaternion.AngleAxis(90, new Vector3(0, 1, 0)) * Quaternion.AngleAxis(-90, new Vector3(0, 0, 1));
-                             
+
+            //ここで飛んできた値を気合でパース
+            Quaternion[] receiveQuaternion = new Quaternion[splitText.Length];
+            for(int i=0;i<splitText.Length;i++){
+                string[] quaternionStr = splitText[i].Split(',');
+                for(int j=0;j<4;j++){
+                    receiveQuaternion[i][j] = float.Parse(quaternionStr[j]);
+                }
+            }
+
+            Spine1.transform.rotation = receiveQuaternion[0];
+
+            RightArm.transform.rotation = receiveQuaternion[1];
+            RightForeArm.transform.rotation = receiveQuaternion[2];
+            RightHand.transform.rotation = receiveQuaternion[3];
+
+            LeftArm.transform.rotation = receiveQuaternion[4];
+            LeftForeArm.transform.rotation = receiveQuaternion[5];
+            LeftHand.transform.rotation = receiveQuaternion[6];
+
+            RightUpLeg.transform.rotation = receiveQuaternion[7];
+            RightLeg.transform.rotation = receiveQuaternion[8];
+
+            LeftUpLeg.transform.rotation = receiveQuaternion[9];
+
+            LeftLeg.transform.rotation = receiveQuaternion[10];
 
             /*
             Spine1.transform.rotation = SpineMid * comp2;
@@ -162,7 +190,7 @@ public class KinectAvatar : MonoBehaviour {
             IPEndPoint remoteEP = null;
             byte[] data = udp.Receive(ref remoteEP);
             rawtext = Encoding.ASCII.GetString(data);
-            //Debug.Log(rawtext);
+            Debug.Log(rawtext);
         }
     } 
 }
