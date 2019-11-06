@@ -175,11 +175,14 @@ public class KinectAvatar : MonoBehaviour {
         }
     }
 
+    //終了したときにスレッドを止める
     void OnApplicationQuit()
     {
         thread.Abort();
     }
 
+    //値を受信するところ、別スレッドで動かしてる。
+    //※要メソッド名変更
     private static void ThreadMethod()
     {
         while(true)
