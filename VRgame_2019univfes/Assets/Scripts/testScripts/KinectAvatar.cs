@@ -25,6 +25,12 @@ public class KinectAvatar : MonoBehaviour {
     Thread thread;
     static string rawtext;
 
+    //キャリブレーションするときにつかう
+    private Vector3 calibrationPos;
+    private Vector3 posVector;
+    private Transform floorPos;
+    private float floorDistance;
+
     //自分の関節とUnityちゃんのボーンを入れるよう
     [SerializeField] GameObject Ref;
     [SerializeField] GameObject LeftUpLeg;
@@ -46,7 +52,13 @@ public class KinectAvatar : MonoBehaviour {
         udp.Client.Bind(localEP);
         udp.Client.ReceiveTimeout = 0;
         thread = new Thread(new ThreadStart(ThreadMethod));
-        thread.Start(); 
+        thread.Start();
+
+        //座標のキャリブレーションに使う
+        floorPos = GameObject.Find("Cube").transform;
+        //Debug.Log("position:" + floorPos.position.ToString("f7"));
+        //Debug.Log("localScale:" + floorPos.localScale);
+        floorDistance = floorPos.localScale.y / 2 + floorPos.position.y;
     }
 
     // Update is called once per frame
@@ -170,9 +182,22 @@ public class KinectAvatar : MonoBehaviour {
 
             // モデルの位置を移動する
             //pos = body.Joints[JointType.SpineMid].Position;
-            Ref.transform.position = new Vector3(receiveQuaternion[11][0],receiveQuaternion[11][1],-receiveQuaternion[11][2]);
-            Debug.Log(Ref.transform.position.ToString("f7"));
+            //Ref.transform.position = new Vector3(receiveQuaternion[11][0],receiveQuaternion[11][1],-receiveQuaternion[11][2]);
+            //Debug.Log(Ref.transform.position.ToString("f7"));
             //Ref.transform.position = new Vector3(pos.X, pos.Y, -pos.Z);
+            posVector = new Vector3(receiveQuaternion[11][0],receiveQuaternion[11][1],-receiveQuaternion[11][2]);
+
+            //kinectの初期値をとっとく
+            if(Input.GetMouseButtonDown(0)){
+                calibrationPos = posVector;
+                calibrationPos = new Vector3(calibrationPos.x,calibrationPos.y - floorDistance, calibrationPos.z);
+            }
+            if(Input.GetMouseButtonDown(1)){
+                calibrationPos = new Vector3(0.0f,0.0f,0.0f);
+            }
+            posVector = posVector - calibrationPos;
+            transform.position = posVector;
+
         }
     }
 
