@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-//using Windows.Kinect;
 
 /*
 *************************************
@@ -18,10 +17,13 @@ using System.Threading;
 public class KinectAvatar : MonoBehaviour {
 
     //ネットワーク関連
+    /*
     [SerializeField] private int LOCAL_PORT = 2001;
     static UdpClient udp;
     Thread thread;
     static string rawtext;
+    */
+    private UDPReceiver udpReceiver;
     private const int receiveQuaternionNum = 11;
 
     //キャリブレーションするときにつかう
@@ -46,17 +48,18 @@ public class KinectAvatar : MonoBehaviour {
     [SerializeField] GameObject RightHand;
 
     void Start () {
+        /*
         udp = new UdpClient(AddressFamily.InterNetwork);
         IPEndPoint localEP = new IPEndPoint(IPAddress.Any, LOCAL_PORT);
         udp.Client.Bind(localEP);
         udp.Client.ReceiveTimeout = 0;
         thread = new Thread(new ThreadStart(ThreadMethod));
         thread.Start();
+        */
+        udpReceiver = GetComponent<UDPReceiver>();
 
         //座標のキャリブレーションに使う
         floorPos = GameObject.Find("Cube").transform;
-        //Debug.Log("position:" + floorPos.position.ToString("f7"));
-        //Debug.Log("localScale:" + floorPos.localScale);
         floorDistance = floorPos.localScale.y / 2 + floorPos.position.y;
     }
 
@@ -64,7 +67,7 @@ public class KinectAvatar : MonoBehaviour {
 
         Quaternion q;
 
-        string[] splitText = rawtext.Split('_');
+        string[] splitText = udpReceiver.GetrawText().Split('_');
         
         // 関節の回転を取得する
         if (splitText.Length > 0)
@@ -118,6 +121,7 @@ public class KinectAvatar : MonoBehaviour {
         }
     }
 
+    /*
     //終了したときにスレッドを止める
     void OnApplicationQuit()
     {
@@ -136,4 +140,5 @@ public class KinectAvatar : MonoBehaviour {
             //Debug.Log(rawtext);
         }
     } 
+    */
 }
