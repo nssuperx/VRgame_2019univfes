@@ -22,6 +22,7 @@ public class KinectAvatar : MonoBehaviour {
     static UdpClient udp;
     Thread thread;
     static string rawtext;
+    private const int receiveQuaternionNum = 11;
 
     //キャリブレーションするときにつかう
     private Vector3 calibrationPos;
@@ -62,7 +63,6 @@ public class KinectAvatar : MonoBehaviour {
     void Update () {
 
         Quaternion q;
-        Quaternion comp2;
 
         string[] splitText = rawtext.Split('_');
         
@@ -74,16 +74,19 @@ public class KinectAvatar : MonoBehaviour {
             q = transform.rotation;
             transform.rotation = Quaternion.identity;
 
-            comp2 = Quaternion.AngleAxis(90, new Vector3(0, 1, 0)) * Quaternion.AngleAxis(-90, new Vector3(0, 0, 1));
-
             //ここで飛んできた値を気合でパース
-            Quaternion[] receiveQuaternion = new Quaternion[splitText.Length];
-            for(int i=0;i<splitText.Length;i++){
+            Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
+            //ここはQuaternion
+            for(int i=0;i<receiveQuaternionNum;i++){
                 string[] quaternionStr = splitText[i].Split(',');
-                for(int j=0;j<quaternionStr.Length;j++){
+                for(int j=0;j<4;j++){
                     receiveQuaternion[i][j] = float.Parse(quaternionStr[j]);
                 }
             }
+            //ここは位置
+            string[] rawPosStr = splitText[11].Split(',');
+            rawPos = new Vector3(float.Parse(rawPosStr[0]),float.Parse(rawPosStr[1]),float.Parse(rawPosStr[2]));
+
 
             Spine1.transform.rotation = receiveQuaternion[0];
             RightArm.transform.rotation = receiveQuaternion[1];
@@ -100,9 +103,6 @@ public class KinectAvatar : MonoBehaviour {
             // モデルの回転を設定する
             transform.rotation = q;
 
-            // モデルの位置を移動する
-            rawPos = new Vector3(receiveQuaternion[11][0],receiveQuaternion[11][1],-receiveQuaternion[11][2]);
-
             //kinectの初期値をとっとく
             //補正値初期化と補正値設定をまとめてやる
             if(Input.GetMouseButtonDown(0)){
@@ -112,6 +112,7 @@ public class KinectAvatar : MonoBehaviour {
             }
             //補正後の値 = 生の値 - 補正値
             fixPos = rawPos - calibrationPos;
+            // モデルの位置を移動する
             transform.position = fixPos;
 
         }
