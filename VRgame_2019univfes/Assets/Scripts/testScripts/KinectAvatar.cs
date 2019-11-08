@@ -18,6 +18,7 @@ public class KinectAvatar : MonoBehaviour {
     private Vector3 fixPos;
     private Transform floorPos;
     private float floorDistance;
+    private float touchTime;
 
     //自分の関節とUnityちゃんのボーンを入れるよう
     [SerializeField] GameObject Ref;
@@ -37,6 +38,7 @@ public class KinectAvatar : MonoBehaviour {
         udpReceiver = GetComponent<UDPReceiver>();
 
         //座標のキャリブレーションに使う
+        touchTime = 0.0f;
         floorPos = GameObject.Find("Cube").transform;
         floorDistance = floorPos.localScale.y / 2 + floorPos.position.y;
     }
@@ -51,7 +53,7 @@ public class KinectAvatar : MonoBehaviour {
         if (splitText.Length > 0)
         {
 
-            // 関節の回転を計算する 
+            // 回転の初期化
             q = transform.rotation;
             transform.rotation = Quaternion.identity;
 
@@ -84,9 +86,16 @@ public class KinectAvatar : MonoBehaviour {
             // モデルの回転を設定する
             transform.rotation = q;
 
+            //キャリブレーション関連
+            if(OVRInput.Get(OVRInput.Button.PrimaryTouchpad) || Input.GetMouseButton(1)){
+                touchTime += Time.deltaTime;
+            }else{
+                touchTime = 0.0f;
+            }
+
             //kinectの初期値をとっとく
             //補正値初期化と補正値設定をまとめてやる
-            if(Input.GetMouseButtonDown(0)){
+            if(Input.GetMouseButtonDown(0) || touchTime > 2.0f){
                 calibrationPos = new Vector3(0.0f,0.0f,0.0f);
                 calibrationPos = rawPos;
                 calibrationPos = new Vector3(calibrationPos.x,calibrationPos.y - floorDistance, calibrationPos.z);
