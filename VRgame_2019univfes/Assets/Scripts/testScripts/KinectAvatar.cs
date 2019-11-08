@@ -16,8 +16,6 @@ using System.Threading;
 */
 
 public class KinectAvatar : MonoBehaviour {
-    
-    //[SerializeField] BodySourceManager bodySourceManager;
 
     //ネットワーク関連
     int LOCAL_PORT = 2001;
@@ -27,7 +25,8 @@ public class KinectAvatar : MonoBehaviour {
 
     //キャリブレーションするときにつかう
     private Vector3 calibrationPos;
-    private Vector3 posVector;
+    private Vector3 rawPos;
+    private Vector3 fixPos;
     private Transform floorPos;
     private float floorDistance;
 
@@ -45,7 +44,6 @@ public class KinectAvatar : MonoBehaviour {
     [SerializeField] GameObject RightForeArm;
     [SerializeField] GameObject RightHand;
 
-    // Use this for initialization
     void Start () {
         udp = new UdpClient(AddressFamily.InterNetwork);
         IPEndPoint localEP = new IPEndPoint(IPAddress.Any, LOCAL_PORT);
@@ -61,77 +59,18 @@ public class KinectAvatar : MonoBehaviour {
         floorDistance = floorPos.localScale.y / 2 + floorPos.position.y;
     }
 
-    // Update is called once per frame
     void Update () {
-        //飛んできた値を気合でパースする例文
-        /*
-        string[] splitText = rawtext.Split(',');
-        Vector3 headPos = new Vector3(
-            float.Parse(splitText[0]),
-            float.Parse(splitText[1]),
-            float.Parse(splitText[2]));
-        */
-
-        /*
-        //最初に追尾している人のBodyデータを取得する
-        Body body = bodySourceManager.GetData().FirstOrDefault(b => b.IsTracked);
-        
-        // Kinectを斜めに置いてもまっすぐにするようにする
-        var floorPlane = bodySourceManager.FloorClipPlane;
-        Quaternion comp = Quaternion.FromToRotation(
-            new Vector3(-floorPlane.X, floorPlane.Y, floorPlane.Z), Vector3.up);
-        */
-
-        Quaternion SpineBase;
-        Quaternion SpineMid;
-        Quaternion SpineShoulder;
-        Quaternion ShoulderLeft;
-        Quaternion ShoulderRight;
-        Quaternion ElbowLeft;
-        Quaternion WristLeft;
-        Quaternion HandLeft;
-        Quaternion ElbowRight;
-        Quaternion WristRight;
-        Quaternion HandRight;
-        Quaternion KneeLeft;
-        Quaternion AnkleLeft;
-        Quaternion KneeRight;
-        Quaternion AnkleRight;
 
         Quaternion q;
         Quaternion comp2;
-        //CameraSpacePoint pos;
 
         string[] splitText = rawtext.Split('_');
         
         // 関節の回転を取得する
         if (splitText.Length > 0)
         {
-            /*
-            var joints = body.JointOrientations;
-
-            //Kinectの関節回転情報をUnityのクォータニオンに変換
-            SpineBase = joints[JointType.SpineBase].Orientation.ToQuaternion(comp);
-            SpineMid = joints[JointType.SpineMid].Orientation.ToQuaternion(comp);
-            SpineShoulder = joints[JointType.SpineShoulder].Orientation.ToQuaternion(comp);
-            ShoulderLeft = joints[JointType.ShoulderLeft].Orientation.ToQuaternion(comp);
-            ShoulderRight = joints[JointType.ShoulderRight].Orientation.ToQuaternion(comp);
-            ElbowLeft = joints[JointType.ElbowLeft].Orientation.ToQuaternion(comp);
-            WristLeft = joints[JointType.WristLeft].Orientation.ToQuaternion(comp);
-            HandLeft = joints[JointType.HandLeft].Orientation.ToQuaternion(comp);
-            ElbowRight = joints[JointType.ElbowRight].Orientation.ToQuaternion(comp);
-            WristRight = joints[JointType.WristRight].Orientation.ToQuaternion(comp);
-            HandRight = joints[JointType.HandRight].Orientation.ToQuaternion(comp);
-            KneeLeft = joints[JointType.KneeLeft].Orientation.ToQuaternion(comp);
-            AnkleLeft = joints[JointType.AnkleLeft].Orientation.ToQuaternion(comp);
-            KneeRight = joints[JointType.KneeRight].Orientation.ToQuaternion(comp);
-            AnkleRight = joints[JointType.AnkleRight].Orientation.ToQuaternion(comp);
-            */
 
             // 関節の回転を計算する 
-
-            //----------------ここまでを処理して送る------------------
-            //----------------以下で代入-----------------------------
             q = transform.rotation;
             transform.rotation = Quaternion.identity;
 
@@ -158,45 +97,22 @@ public class KinectAvatar : MonoBehaviour {
             LeftUpLeg.transform.rotation = receiveQuaternion[9];
             LeftLeg.transform.rotation = receiveQuaternion[10];
 
-            /*
-            Spine1.transform.rotation = SpineMid * comp2;
-
-            RightArm.transform.rotation = ElbowRight * comp2;
-            RightForeArm.transform.rotation = WristRight * comp2;
-            RightHand.transform.rotation = HandRight * comp2;
-
-            LeftArm.transform.rotation = ElbowLeft * comp2;
-            LeftForeArm.transform.rotation = WristLeft * comp2;
-            LeftHand.transform.rotation = HandLeft * comp2;
-
-            RightUpLeg.transform.rotation = KneeRight * comp2;
-            RightLeg.transform.rotation = AnkleRight * comp2;
-
-            LeftUpLeg.transform.rotation = KneeLeft * Quaternion.AngleAxis(-90, new Vector3(0, 0, 1));
-
-            LeftLeg.transform.rotation = AnkleLeft * Quaternion.AngleAxis(-90, new Vector3(0, 0, 1));
-            */
-
             // モデルの回転を設定する
             transform.rotation = q;
 
             // モデルの位置を移動する
-            //pos = body.Joints[JointType.SpineMid].Position;
-            //Ref.transform.position = new Vector3(receiveQuaternion[11][0],receiveQuaternion[11][1],-receiveQuaternion[11][2]);
-            //Debug.Log(Ref.transform.position.ToString("f7"));
-            //Ref.transform.position = new Vector3(pos.X, pos.Y, -pos.Z);
-            posVector = new Vector3(receiveQuaternion[11][0],receiveQuaternion[11][1],-receiveQuaternion[11][2]);
+            rawPos = new Vector3(receiveQuaternion[11][0],receiveQuaternion[11][1],-receiveQuaternion[11][2]);
 
             //kinectの初期値をとっとく
+            //補正値初期化と補正値設定をまとめてやる
             if(Input.GetMouseButtonDown(0)){
-                calibrationPos = posVector;
+                calibrationPos = new Vector3(0.0f,0.0f,0.0f);
+                calibrationPos = rawPos;
                 calibrationPos = new Vector3(calibrationPos.x,calibrationPos.y - floorDistance, calibrationPos.z);
             }
-            if(Input.GetMouseButtonDown(1)){
-                calibrationPos = new Vector3(0.0f,0.0f,0.0f);
-            }
-            posVector = posVector - calibrationPos;
-            transform.position = posVector;
+            //補正後の値 = 生の値 - 補正値
+            fixPos = rawPos - calibrationPos;
+            transform.position = fixPos;
 
         }
     }
