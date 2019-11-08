@@ -18,7 +18,7 @@ using System.Threading;
 public class KinectAvatar : MonoBehaviour {
 
     //ネットワーク関連
-    int LOCAL_PORT = 2001;
+    [SerializeField] private int LOCAL_PORT = 2001;
     static UdpClient udp;
     Thread thread;
     static string rawtext;
