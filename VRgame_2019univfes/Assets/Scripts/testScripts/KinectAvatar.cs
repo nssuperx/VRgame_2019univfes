@@ -1,28 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 
-/*
-*************************************
-このクラスは神クラスです。
-このコードはUDP受信機能も押し込んである。
-*************************************
-*/
+/*********************************
+このクラスはunityちゃんを動かします
+**********************************/
 
 public class KinectAvatar : MonoBehaviour {
 
     //ネットワーク関連
-    /*
-    [SerializeField] private int LOCAL_PORT = 2001;
-    static UdpClient udp;
-    Thread thread;
-    static string rawtext;
-    */
     private UDPReceiver udpReceiver;
     private const int receiveQuaternionNum = 11;
 
@@ -48,14 +34,6 @@ public class KinectAvatar : MonoBehaviour {
     [SerializeField] GameObject RightHand;
 
     void Start () {
-        /*
-        udp = new UdpClient(AddressFamily.InterNetwork);
-        IPEndPoint localEP = new IPEndPoint(IPAddress.Any, LOCAL_PORT);
-        udp.Client.Bind(localEP);
-        udp.Client.ReceiveTimeout = 0;
-        thread = new Thread(new ThreadStart(ThreadMethod));
-        thread.Start();
-        */
         udpReceiver = GetComponent<UDPReceiver>();
 
         //座標のキャリブレーションに使う
@@ -88,7 +66,7 @@ public class KinectAvatar : MonoBehaviour {
             }
             //ここは位置
             string[] rawPosStr = splitText[11].Split(',');
-            rawPos = new Vector3(float.Parse(rawPosStr[0]),float.Parse(rawPosStr[1]),float.Parse(rawPosStr[2]));
+            rawPos = new Vector3(float.Parse(rawPosStr[0]),float.Parse(rawPosStr[1]),-float.Parse(rawPosStr[2]));
 
 
             Spine1.transform.rotation = receiveQuaternion[0];
@@ -120,25 +98,4 @@ public class KinectAvatar : MonoBehaviour {
 
         }
     }
-
-    /*
-    //終了したときにスレッドを止める
-    void OnApplicationQuit()
-    {
-        thread.Abort();
-    }
-
-    //値を受信するところ、別スレッドで動かしてる。
-    //※要メソッド名変更
-    private static void ThreadMethod()
-    {
-        while(true)
-        {
-            IPEndPoint remoteEP = null;
-            byte[] data = udp.Receive(ref remoteEP);
-            rawtext = Encoding.ASCII.GetString(data);
-            //Debug.Log(rawtext);
-        }
-    } 
-    */
 }
