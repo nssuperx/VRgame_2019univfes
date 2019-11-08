@@ -16,7 +16,7 @@ public class KinectAvatar : MonoBehaviour {
     private Vector3 calibrationPos;
     private Vector3 rawPos;
     private Vector3 fixPos;
-    private Transform floorPos;
+    [SerializeField] private Transform floorPos;
     private float floorDistance;
     private float touchTime;
 
@@ -39,7 +39,6 @@ public class KinectAvatar : MonoBehaviour {
 
         //座標のキャリブレーションに使う
         touchTime = 0.0f;
-        floorPos = GameObject.Find("Cube").transform;
         floorDistance = floorPos.localScale.y / 2 + floorPos.position.y;
     }
 

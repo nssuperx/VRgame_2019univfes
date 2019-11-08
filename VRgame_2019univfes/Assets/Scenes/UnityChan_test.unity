@@ -219,6 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7536fa1e91bb84fb6d070845f0da10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floorPos: {fileID: 2061812868}
   Ref: {fileID: 1743049193}
   LeftUpLeg: {fileID: 304220169}
   LeftLeg: {fileID: 1633896508}
