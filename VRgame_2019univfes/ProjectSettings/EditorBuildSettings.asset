@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/BallavoidScene.unity
+    guid: 9716d372bdf89e848b41b95094ddf057
   m_configObjects: {}
