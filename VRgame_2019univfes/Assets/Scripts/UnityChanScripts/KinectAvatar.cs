@@ -69,7 +69,7 @@ public class KinectAvatar : MonoBehaviour {
             }
             //ここはunityちゃんのposition
             string[] rawPosStr = splitText[11].Split(',');
-            rawPos = new Vector3(float.Parse(rawPosStr[0]),float.Parse(rawPosStr[1]),-float.Parse(rawPosStr[2]));
+            rawPos = new Vector3(float.Parse(rawPosStr[0]),float.Parse(rawPosStr[1]),float.Parse(rawPosStr[2]));
 
             Spine1.transform.rotation = receiveQuaternion[0];
             RightArm.transform.rotation = receiveQuaternion[1];
