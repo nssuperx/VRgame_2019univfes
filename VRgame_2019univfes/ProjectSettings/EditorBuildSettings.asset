@@ -5,10 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+<<<<<<< HEAD
   - enabled: 0
     path: Assets/Scenes/Oculus_Test.unity
     guid: 9a6a088a68becf54291ad8800c03b44e
   - enabled: 1
     path: Assets/Scenes/BallavoidScene.unity
     guid: 9716d372bdf89e848b41b95094ddf057
+=======
+  - enabled: 1
+    path: Assets/Scenes/UnityChan_test.unity
+    guid: dfbe050d8b653bb40b3162461afa4258
+>>>>>>> upstream/master
   m_configObjects: {}
