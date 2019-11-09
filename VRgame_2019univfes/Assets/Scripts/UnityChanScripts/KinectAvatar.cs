@@ -94,7 +94,7 @@ public class KinectAvatar : MonoBehaviour {
 
             //kinectの初期値をとっとく
             //補正値初期化と補正値設定をまとめてやる
-            if(Input.GetMouseButtonDown(0) || touchTime > 2.0f){
+            if(touchTime > 2.0f){
                 calibrationPos = new Vector3(0.0f,0.0f,0.0f);
                 calibrationPos = rawPos;
                 calibrationPos = new Vector3(calibrationPos.x,calibrationPos.y - floorDistance, calibrationPos.z);
