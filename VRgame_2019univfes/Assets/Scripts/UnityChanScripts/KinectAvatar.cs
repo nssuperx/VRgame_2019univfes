@@ -34,6 +34,8 @@ public class KinectAvatar : MonoBehaviour {
     [SerializeField] GameObject RightForeArm;
     [SerializeField] GameObject RightHand;
 
+    [SerializeField] GameObject OVRCamera;
+
     void Start () {
         udpReceiver = GetComponent<UDPReceiver>();
 
@@ -65,10 +67,9 @@ public class KinectAvatar : MonoBehaviour {
                     receiveQuaternion[i][j] = float.Parse(quaternionStr[j]);
                 }
             }
-            //ここは位置
+            //ここはunityちゃんのposition
             string[] rawPosStr = splitText[11].Split(',');
             rawPos = new Vector3(float.Parse(rawPosStr[0]),float.Parse(rawPosStr[1]),-float.Parse(rawPosStr[2]));
-
 
             Spine1.transform.rotation = receiveQuaternion[0];
             RightArm.transform.rotation = receiveQuaternion[1];
