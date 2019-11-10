@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 831137332514786365}
   m_LocalRotation: {x: -0.47192228, y: 0.5467804, z: 0.45703638, w: 0.5190746}
-  m_LocalPosition: {x: 0, y: 0.11, z: 0}
+  m_LocalPosition: {x: 0, y: 0.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 831137332900442058}
@@ -54,7 +54,7 @@ GameObject:
   m_Component:
   - component: {fileID: 831137332515097760}
   - component: {fileID: 831137332529192388}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: hair_accce
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -545,7 +545,7 @@ GameObject:
   m_Component:
   - component: {fileID: 831137332515097788}
   - component: {fileID: 831137332529192390}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: hair_frontside
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2337,7 +2337,7 @@ GameObject:
   m_Component:
   - component: {fileID: 831137332515097894}
   - component: {fileID: 831137332529192402}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3749,7 +3749,7 @@ GameObject:
   m_Component:
   - component: {fileID: 831137332515097962}
   - component: {fileID: 831137332529192408}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: cheek
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3900,7 +3900,7 @@ GameObject:
   m_Component:
   - component: {fileID: 831137332515097968}
   - component: {fileID: 831137332529192406}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: hairband
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5274,7 +5274,7 @@ GameObject:
   m_Component:
   - component: {fileID: 831137332515098022}
   - component: {fileID: 831137332529192360}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: hair_front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7326,14 +7326,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 831137332514786364}
     m_Modifications:
-    - target: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
-      propertyPath: m_Name
-      value: OVRCameraRig
-      objectReference: {fileID: 0}
-    - target: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -7377,6 +7369,14 @@ PrefabInstance:
     - target: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
+      propertyPath: m_Name
+      value: OVRCameraRig
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 159718, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_Layer
