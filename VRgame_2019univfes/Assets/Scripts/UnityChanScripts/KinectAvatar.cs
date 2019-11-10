@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 /*********************************
 このクラスはunityちゃんを動かします
@@ -19,6 +20,15 @@ public class KinectAvatar : MonoBehaviour {
     [SerializeField] private Transform floorPos;
     private float floorDistance;
     private float touchTime;
+
+    //カメラがくがく補正
+    [SerializeField] private const int keepFrame = 10;
+    //ここはposition
+    Queue<Vector3> posQue = new Queue<Vector3>();
+    private Vector3 lowPassBuffer,sendPos;
+    //ここはspineのQuaternion
+    Queue<Quaternion> quaternionQue = new Queue<Quaternion>();
+    private Quaternion quaternionLowPassBuffer,sendQuaternion;
 
     //自分の関節とUnityちゃんのボーンを入れるよう
     [SerializeField] GameObject Ref;
@@ -42,6 +52,16 @@ public class KinectAvatar : MonoBehaviour {
         //座標のキャリブレーションに使う
         touchTime = 0.0f;
         floorDistance = floorPos.localScale.y / 2 + floorPos.position.y;
+
+        //カメラ　ローパスフィルター処理
+        lowPassBuffer = new Vector3(0.0f,0.0f,0.0f);
+        quaternionLowPassBuffer = new Quaternion(0.0f,0.0f,0.0f,0.0f);
+        sendPos = new Vector3(0.0f,0.0f,0.0f);
+        sendQuaternion = new Quaternion(0.0f,0.0f,0.0f,0.0f);
+        for(int i=0;i<keepFrame;i++){
+            posQue.Enqueue(new Vector3(0.0f,0.0f,0.0f));
+            quaternionQue.Enqueue(new Quaternion(0.0f,0.0f,0.0f,0.0f));
+        }
     }
 
     void Update () {
@@ -49,6 +69,8 @@ public class KinectAvatar : MonoBehaviour {
         Quaternion q;
 
         string[] splitText = udpReceiver.GetrawText().Split('_');
+        //Debug.Log("Update:" + splitText[0] + ":" + splitText[11]);
+        //Debug.Log("Update:" + DateTime.Now + "." + DateTime.Now.Millisecond);
         
         // 関節の回転を取得する
         if (splitText.Length > 0)
@@ -72,6 +94,18 @@ public class KinectAvatar : MonoBehaviour {
             rawPos = new Vector3(float.Parse(rawPosStr[0]),float.Parse(rawPosStr[1]),float.Parse(rawPosStr[2]));
 
             Spine1.transform.rotation = receiveQuaternion[0];
+
+            //ローパスフィルター処理
+            Quaternion dequeueQuaternion;
+            dequeueQuaternion = quaternionQue.Dequeue();
+            for(int i=0;i<4;i++){
+                quaternionLowPassBuffer[i] -= dequeueQuaternion[i];
+                quaternionLowPassBuffer[i] += Spine1.transform.rotation[i];
+                sendQuaternion[i] = quaternionLowPassBuffer[i] / (float)keepFrame;
+            }
+            quaternionQue.Enqueue(Spine1.transform.rotation);
+            Spine1.transform.rotation = sendQuaternion;
+
             RightArm.transform.rotation = receiveQuaternion[1];
             RightForeArm.transform.rotation = receiveQuaternion[2];
             RightHand.transform.rotation = receiveQuaternion[3];
@@ -85,6 +119,14 @@ public class KinectAvatar : MonoBehaviour {
 
             // モデルの回転を設定する
             transform.rotation = q;
+
+            //ローパスフィルター処理
+            lowPassBuffer -= posQue.Dequeue();
+            lowPassBuffer += rawPos;
+            posQue.Enqueue(rawPos);
+            sendPos = lowPassBuffer / (float)keepFrame;
+            //Debug.Log("noLowPass:" + posVector.ToString("f7"));
+            Debug.Log("LowPass:" + sendPos.ToString("f7"));
 
             //キャリブレーション関連
             if(OVRInput.Get(OVRInput.Button.PrimaryTouchpad) || Input.GetMouseButton(1)){
