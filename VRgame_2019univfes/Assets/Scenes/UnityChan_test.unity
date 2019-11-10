@@ -673,6 +673,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: unitychan
       objectReference: {fileID: 0}
+    - target: {fileID: 831137332514786365, guid: 300822ff4117c344b8ec14f44c0722a4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 831137332515097740, guid: 300822ff4117c344b8ec14f44c0722a4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -728,6 +733,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 831137332515524736, guid: 300822ff4117c344b8ec14f44c0722a4,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 831137332515524764, guid: 300822ff4117c344b8ec14f44c0722a4,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 831137332515524778, guid: 300822ff4117c344b8ec14f44c0722a4,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 831137332515524870, guid: 300822ff4117c344b8ec14f44c0722a4,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 831137332515524944, guid: 300822ff4117c344b8ec14f44c0722a4,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 831137332515524998, guid: 300822ff4117c344b8ec14f44c0722a4,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 831137332898930710, guid: 300822ff4117c344b8ec14f44c0722a4,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 55
+      objectReference: {fileID: 0}
     - target: {fileID: 831137333166795447, guid: 300822ff4117c344b8ec14f44c0722a4,
         type: 3}
       propertyPath: floorPos
@@ -743,10 +783,15 @@ PrefabInstance:
       propertyPath: OVRCamera
       value: 
       objectReference: {fileID: 1431833627}
-    - target: {fileID: 831137332514786365, guid: 300822ff4117c344b8ec14f44c0722a4,
+    - target: {fileID: 851117550334345304, guid: 300822ff4117c344b8ec14f44c0722a4,
         type: 3}
-      propertyPath: m_IsActive
-      value: 1
+      propertyPath: m_CullingMask.m_Bits
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 851117552622526402, guid: 300822ff4117c344b8ec14f44c0722a4,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 55
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 300822ff4117c344b8ec14f44c0722a4, type: 3}
