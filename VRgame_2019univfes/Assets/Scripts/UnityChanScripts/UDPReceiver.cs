@@ -23,10 +23,6 @@ public class UDPReceiver : MonoBehaviour
         thread.Start(); 
     }
 
-    void Update(){
-        //Debug.Log("Update:" + DateTime.Now + "." + DateTime.Now.Millisecond);
-    }
-
     void OnApplicationQuit()
     {
         thread.Abort();
@@ -39,7 +35,6 @@ public class UDPReceiver : MonoBehaviour
             IPEndPoint remoteEP = null;
             byte[] data = udp.Receive(ref remoteEP);
             rawText = Encoding.ASCII.GetString(data);
-            Debug.Log("thread->while:" + DateTime.Now + "." + DateTime.Now.Millisecond);
         }
     }
 
