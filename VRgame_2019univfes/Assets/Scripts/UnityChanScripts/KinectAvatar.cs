@@ -69,12 +69,15 @@ public class KinectAvatar : MonoBehaviour {
         Quaternion q;
 
         string[] splitText = udpReceiver.GetrawText().Split('_');
+        //受信できてないときどうなってんのか確認
+        //Debug.Log(splitText.Length);
         
         // 関節の回転を取得する
-        if (splitText.Length > 0)
+        if (splitText.Length > receiveQuaternionNum)
         {
 
             // 回転の初期化
+            //ここ試しにコメント化してみよう
             q = transform.rotation;
             transform.rotation = Quaternion.identity;
 
@@ -92,6 +95,7 @@ public class KinectAvatar : MonoBehaviour {
             rawPos = new Vector3(float.Parse(rawPosStr[0]),float.Parse(rawPosStr[1]),float.Parse(rawPosStr[2]));
 
             //ローパスフィルター処理
+            /*
             Quaternion dequeueQuaternion;
             dequeueQuaternion = quaternionQue.Dequeue();
             for(int i=0;i<4;i++){
@@ -101,6 +105,8 @@ public class KinectAvatar : MonoBehaviour {
             }
             quaternionQue.Enqueue(receiveQuaternion[0]);
             Spine1.transform.rotation = filteredQuaternion;
+            */
+            Spine1.transform.rotation = receiveQuaternion[0];
 
             RightArm.transform.rotation = receiveQuaternion[1];
             RightForeArm.transform.rotation = receiveQuaternion[2];
@@ -114,6 +120,7 @@ public class KinectAvatar : MonoBehaviour {
             LeftLeg.transform.rotation = receiveQuaternion[10];
 
             // モデルの回転を設定する
+            //ここ試しにコメント化してみよう
             transform.rotation = q;
 
             //ローパスフィルター処理
