@@ -116,7 +116,6 @@ public class KinectAvatar : MonoBehaviour {
             
             //ここで飛んできた値を気合でパース
             
-            //Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
             //ここはQuaternion
             for(int i=0;i<receiveQuaternionNum;i++){
                 string[] quaternionStr = splitText[i].Split(',');
@@ -128,98 +127,12 @@ public class KinectAvatar : MonoBehaviour {
             string[] rawPosStr = splitText[11].Split(',');
             rawPos = new Vector3(float.Parse(rawPosStr[0]),float.Parse(rawPosStr[1]),float.Parse(rawPosStr[2]));
             
-
-
-            //ローパスフィルター処理
-            /*
-            Quaternion dequeueQuaternion;
-            dequeueQuaternion = quaternionQue.Dequeue();
-            for(int i=0;i<4;i++){
-                quaternionLowPassBuffer[i] -= dequeueQuaternion[i];
-                quaternionLowPassBuffer[i] += Spine1.transform.rotation[i];
-                filteredQuaternion[i] = quaternionLowPassBuffer[i] / (float)keepFrame;
-            }
-            quaternionQue.Enqueue(receiveQuaternion[0]);
-            Spine1.transform.rotation = filteredQuaternion;
-            */
-
-            /*ここは前の回転処理
-            Spine1.transform.rotation = receiveQuaternion[0];
-
-            RightArm.transform.rotation = receiveQuaternion[1];
-            RightForeArm.transform.rotation = receiveQuaternion[2];
-            RightHand.transform.rotation = receiveQuaternion[3];
-            LeftArm.transform.rotation = receiveQuaternion[4];
-            LeftForeArm.transform.rotation = receiveQuaternion[5];
-            LeftHand.transform.rotation = receiveQuaternion[6];
-            RightUpLeg.transform.rotation = receiveQuaternion[7];
-            RightLeg.transform.rotation = receiveQuaternion[8];
-            LeftUpLeg.transform.rotation = receiveQuaternion[9];
-            LeftLeg.transform.rotation = receiveQuaternion[10];
-            */
-
-            // モデルの回転を設定する
-            //ここ試しにコメント化してみよう
             transform.rotation = q;
 
-            /*
-            //ローパスフィルター処理
-            lowPassBuffer -= posQue.Dequeue();
-            lowPassBuffer += rawPos;
-            posQue.Enqueue(rawPos);
-            filteredPos = lowPassBuffer / (float)keepFrame;
 
-            //キャリブレーション関連
-            if(OVRInput.Get(OVRInput.Button.PrimaryTouchpad) || Input.GetMouseButton(1)){
-                touchTime += Time.deltaTime;
-            }else{
-                touchTime = 0.0f;
-            }
-
-            //kinectの初期値をとっとく
-            //補正値初期化と補正値設定をまとめてやる
-            if(touchTime > 2.0f){
-                calibrationPos = new Vector3(0.0f,0.0f,0.0f);
-                calibrationPos = filteredPos;
-                calibrationPos = new Vector3(calibrationPos.x,calibrationPos.y - floorDistance, calibrationPos.z);
-            }
-            //補正後の値 = 生の値 - 補正値
-            fixPos = filteredPos - calibrationPos;
-            // モデルの位置を移動する
-            transform.position = fixPos;
-            */
         }else{
             dt += Time.deltaTime * 30;
         }
-
-        /*
-        //ここで飛んできた値を気合でパース
-        Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
-        //ここはQuaternion
-        for(int i=0;i<receiveQuaternionNum;i++){
-            string[] quaternionStr = splitText[i].Split(',');
-            for(int j=0;j<4;j++){
-                receiveQuaternion[i][j] = float.Parse(quaternionStr[j]);
-            }
-        }
-        //ここはunityちゃんのposition
-        string[] rawPosStr = splitText[11].Split(',');
-        rawPos = new Vector3(float.Parse(rawPosStr[0]),float.Parse(rawPosStr[1]),float.Parse(rawPosStr[2]));
-        */
-
-        /*
-        Spine1.transform.rotation = receiveQuaternion[0];
-        RightArm.transform.rotation = receiveQuaternion[1];
-        RightForeArm.transform.rotation = receiveQuaternion[2];
-        RightHand.transform.rotation = receiveQuaternion[3];
-        LeftArm.transform.rotation = receiveQuaternion[4];
-        LeftForeArm.transform.rotation = receiveQuaternion[5];
-        LeftHand.transform.rotation = receiveQuaternion[6];
-        RightUpLeg.transform.rotation = receiveQuaternion[7];
-        RightLeg.transform.rotation = receiveQuaternion[8];
-        LeftUpLeg.transform.rotation = receiveQuaternion[9];
-        LeftLeg.transform.rotation = receiveQuaternion[10];
-        */
 
         Spine1.transform.rotation = Quaternion.Lerp(Spine1.transform.rotation,receiveQuaternion[0],0.5f);
         RightArm.transform.rotation = Quaternion.Lerp(RightArm.transform.rotation,receiveQuaternion[1],0.5f);
