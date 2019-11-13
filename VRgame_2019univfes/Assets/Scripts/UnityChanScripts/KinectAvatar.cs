@@ -41,7 +41,7 @@ public class KinectAvatar : MonoBehaviour {
     private Quaternion nowQuaternion;
     private float dt;
     Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
-    [SerializeField,Range(0f,1f)] private float lerpValue = 0.3f;
+    [SerializeField,Range(0f,1f)] private float lerpValue = 0.5f;
 
     //自分の関節とUnityちゃんのボーンを入れるよう
     [SerializeField] GameObject Ref;
@@ -136,7 +136,7 @@ public class KinectAvatar : MonoBehaviour {
             dt += Time.deltaTime * 30;
         }
 
-        Spine1.transform.rotation = Quaternion.Lerp(Spine1.transform.rotation,receiveQuaternion[0],lerpValue);
+        Spine1.transform.rotation = Quaternion.Lerp(Spine1.transform.rotation,receiveQuaternion[0],0.1f);
         RightArm.transform.rotation = Quaternion.Lerp(RightArm.transform.rotation,receiveQuaternion[1],lerpValue);
         RightForeArm.transform.rotation = Quaternion.Lerp(RightForeArm.transform.rotation,receiveQuaternion[2],lerpValue);
         RightHand.transform.rotation = Quaternion.Lerp(RightHand.transform.rotation,receiveQuaternion[3],lerpValue);
