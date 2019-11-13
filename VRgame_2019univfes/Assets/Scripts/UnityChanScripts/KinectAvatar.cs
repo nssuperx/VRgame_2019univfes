@@ -88,8 +88,9 @@ public class KinectAvatar : MonoBehaviour {
         0sのとき0
         1/30sのとき1
         になるように補完する
+        pre = Quaternion.Lerp(pre,now,dt);
         *****************/
-        
+
         // 関節の回転を取得する
         if (splitText.Length >= receiveQuaternionNum + 1)
         {
