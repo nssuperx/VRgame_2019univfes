@@ -83,6 +83,11 @@ public class KinectAvatar : MonoBehaviour {
         動きと回転の更新は常に続ける必要がある。
 
         使えそうな方法:quaternionの線形補完
+        Time.deltatimeでいい感じに補完する
+        30fpsで値が来ることを信じる。
+        0sのとき0
+        1/30sのとき1
+        になるように補完する
         *****************/
         
         // 関節の回転を取得する
