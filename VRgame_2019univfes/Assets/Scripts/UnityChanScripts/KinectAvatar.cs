@@ -7,6 +7,14 @@ using System;
 このクラスはunityちゃんを動かします
 **********************************/
 
+/*********************************
+やることリスト
+0. 新しい値が来てるとき来てないときで処理をしっかり分ける。 <- いまここ
+0.1 新しい値来てないときとれるstring(rawStr)の値確認
+1. unityちゃん本体の回転初期化処理を止めてみる。
+2. Quaternion線形補完を試す
+**********************************/
+
 public class KinectAvatar : MonoBehaviour {
 
     //ネットワーク関連
@@ -43,8 +51,6 @@ public class KinectAvatar : MonoBehaviour {
     [SerializeField] GameObject RightArm;
     [SerializeField] GameObject RightForeArm;
     [SerializeField] GameObject RightHand;
-
-    //[SerializeField] GameObject OVRCamera;
 
     void Start () {
         udpReceiver = GetComponent<UDPReceiver>();
@@ -88,6 +94,7 @@ public class KinectAvatar : MonoBehaviour {
         0sのとき0
         1/30sのとき1
         になるように補完する
+        dt = Time.deltaTime * 30;
         pre = Quaternion.Lerp(pre,now,dt);
         *****************/
 
@@ -143,6 +150,7 @@ public class KinectAvatar : MonoBehaviour {
             //ここ試しにコメント化してみよう
             transform.rotation = q;
 
+            /*
             //ローパスフィルター処理
             lowPassBuffer -= posQue.Dequeue();
             lowPassBuffer += rawPos;
@@ -167,7 +175,34 @@ public class KinectAvatar : MonoBehaviour {
             fixPos = filteredPos - calibrationPos;
             // モデルの位置を移動する
             transform.position = fixPos;
+            */
 
         }
+
+
+        //ローパスフィルター処理
+        lowPassBuffer -= posQue.Dequeue();
+        lowPassBuffer += rawPos;
+        posQue.Enqueue(rawPos);
+        filteredPos = lowPassBuffer / (float)keepFrame;
+
+        //キャリブレーション関連
+        if(OVRInput.Get(OVRInput.Button.PrimaryTouchpad) || Input.GetMouseButton(1)){
+            touchTime += Time.deltaTime;
+        }else{
+            touchTime = 0.0f;
+        }
+
+        //kinectの初期値をとっとく
+        //補正値初期化と補正値設定をまとめてやる
+        if(touchTime > 2.0f){
+            calibrationPos = new Vector3(0.0f,0.0f,0.0f);
+            calibrationPos = filteredPos;
+            calibrationPos = new Vector3(calibrationPos.x,calibrationPos.y - floorDistance, calibrationPos.z);
+        }
+        //補正後の値 = 生の値 - 補正値
+        fixPos = filteredPos - calibrationPos;
+        // モデルの位置を移動する
+        transform.position = fixPos;
     }
 }
