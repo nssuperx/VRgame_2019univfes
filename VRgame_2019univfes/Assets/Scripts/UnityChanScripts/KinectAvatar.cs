@@ -11,6 +11,7 @@ using System;
 やることリスト
 0. 新しい値が来てるとき来てないときで処理をしっかり分ける。 <- いまここ
 0.1 新しい値来てないときとれるstring(rawStr)の値確認
+    前の値はもちろん残ったまんま
 1. unityちゃん本体の回転初期化処理を止めてみる。
 2. Quaternion線形補完を試す
 **********************************/
@@ -37,6 +38,8 @@ public class KinectAvatar : MonoBehaviour {
     //ここはspineのQuaternion
     Queue<Quaternion> quaternionQue = new Queue<Quaternion>();
     private Quaternion quaternionLowPassBuffer,filteredQuaternion;
+    private Quaternion nowQuaternion;
+    private float dt;
 
     //自分の関節とUnityちゃんのボーンを入れるよう
     [SerializeField] GameObject Ref;
@@ -60,8 +63,10 @@ public class KinectAvatar : MonoBehaviour {
         floorDistance = floorPos.localScale.y / 2 + floorPos.position.y;
 
         //カメラ　ローパスフィルター処理
+        dt = 0f;
         lowPassBuffer = new Vector3(0.0f,0.0f,0.0f);
         quaternionLowPassBuffer = new Quaternion(0.0f,0.0f,0.0f,0.0f);
+        nowQuaternion = new Quaternion(0.0f,0.0f,0.0f,0.0f);
         filteredPos = new Vector3(0.0f,0.0f,0.0f);
         filteredQuaternion = new Quaternion(0.0f,0.0f,0.0f,0.0f);
         for(int i=0;i<keepFrame;i++){
@@ -73,11 +78,11 @@ public class KinectAvatar : MonoBehaviour {
     void Update () {
 
         Quaternion q;
+        Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
 
         string[] splitText = udpReceiver.GetrawText().Split('_');
         //受信できてないときどうなってんのか確認
         //ずっと値が入ってる
-        Debug.Log(splitText[11]);
 
         /****************
         めも
@@ -101,15 +106,17 @@ public class KinectAvatar : MonoBehaviour {
         // 関節の回転を取得する
         if (splitText.Length >= receiveQuaternionNum + 1)
         {
-
+            dt = 0f;
             // 回転の初期化
             //ここ試しにコメント化してみよう
+            //関係なかった
             q = transform.rotation;
-            Debug.Log("unitychan" + q.ToString("f7"));
             transform.rotation = Quaternion.identity;
 
+            
             //ここで飛んできた値を気合でパース
-            Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
+            
+            //Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
             //ここはQuaternion
             for(int i=0;i<receiveQuaternionNum;i++){
                 string[] quaternionStr = splitText[i].Split(',');
@@ -120,6 +127,8 @@ public class KinectAvatar : MonoBehaviour {
             //ここはunityちゃんのposition
             string[] rawPosStr = splitText[11].Split(',');
             rawPos = new Vector3(float.Parse(rawPosStr[0]),float.Parse(rawPosStr[1]),float.Parse(rawPosStr[2]));
+            
+
 
             //ローパスフィルター処理
             /*
@@ -133,6 +142,8 @@ public class KinectAvatar : MonoBehaviour {
             quaternionQue.Enqueue(receiveQuaternion[0]);
             Spine1.transform.rotation = filteredQuaternion;
             */
+
+            /*ここは前の回転処理
             Spine1.transform.rotation = receiveQuaternion[0];
 
             RightArm.transform.rotation = receiveQuaternion[1];
@@ -145,6 +156,7 @@ public class KinectAvatar : MonoBehaviour {
             RightLeg.transform.rotation = receiveQuaternion[8];
             LeftUpLeg.transform.rotation = receiveQuaternion[9];
             LeftLeg.transform.rotation = receiveQuaternion[10];
+            */
 
             // モデルの回転を設定する
             //ここ試しにコメント化してみよう
@@ -176,8 +188,50 @@ public class KinectAvatar : MonoBehaviour {
             // モデルの位置を移動する
             transform.position = fixPos;
             */
-
+        }else{
+            dt += Time.deltaTime * 30;
         }
+
+        /*
+        //ここで飛んできた値を気合でパース
+        Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
+        //ここはQuaternion
+        for(int i=0;i<receiveQuaternionNum;i++){
+            string[] quaternionStr = splitText[i].Split(',');
+            for(int j=0;j<4;j++){
+                receiveQuaternion[i][j] = float.Parse(quaternionStr[j]);
+            }
+        }
+        //ここはunityちゃんのposition
+        string[] rawPosStr = splitText[11].Split(',');
+        rawPos = new Vector3(float.Parse(rawPosStr[0]),float.Parse(rawPosStr[1]),float.Parse(rawPosStr[2]));
+        */
+
+        /*
+        Spine1.transform.rotation = receiveQuaternion[0];
+        RightArm.transform.rotation = receiveQuaternion[1];
+        RightForeArm.transform.rotation = receiveQuaternion[2];
+        RightHand.transform.rotation = receiveQuaternion[3];
+        LeftArm.transform.rotation = receiveQuaternion[4];
+        LeftForeArm.transform.rotation = receiveQuaternion[5];
+        LeftHand.transform.rotation = receiveQuaternion[6];
+        RightUpLeg.transform.rotation = receiveQuaternion[7];
+        RightLeg.transform.rotation = receiveQuaternion[8];
+        LeftUpLeg.transform.rotation = receiveQuaternion[9];
+        LeftLeg.transform.rotation = receiveQuaternion[10];
+        */
+
+        Spine1.transform.rotation = Quaternion.Lerp(Spine1.transform.rotation,receiveQuaternion[0],0.5f);
+        RightArm.transform.rotation = Quaternion.Lerp(RightArm.transform.rotation,receiveQuaternion[1],0.5f);
+        RightForeArm.transform.rotation = Quaternion.Lerp(RightForeArm.transform.rotation,receiveQuaternion[2],0.5f);
+        RightHand.transform.rotation = Quaternion.Lerp(RightHand.transform.rotation,receiveQuaternion[3],0.5f);
+        LeftArm.transform.rotation = Quaternion.Lerp(LeftArm.transform.rotation,receiveQuaternion[4],0.5f);
+        LeftForeArm.transform.rotation = Quaternion.Lerp(LeftForeArm.transform.rotation,receiveQuaternion[5],0.5f);
+        LeftHand.transform.rotation = Quaternion.Lerp(LeftHand.transform.rotation,receiveQuaternion[6],0.5f);
+        RightUpLeg.transform.rotation = Quaternion.Lerp(RightUpLeg.transform.rotation,receiveQuaternion[7],0.5f);
+        RightLeg.transform.rotation = Quaternion.Lerp(RightLeg.transform.rotation,receiveQuaternion[8],0.5f);
+        LeftUpLeg.transform.rotation = Quaternion.Lerp(LeftUpLeg.transform.rotation,receiveQuaternion[9],0.5f);
+        LeftLeg.transform.rotation = Quaternion.Lerp(LeftLeg.transform.rotation,receiveQuaternion[10],0.5f);
 
 
         //ローパスフィルター処理
