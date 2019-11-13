@@ -40,6 +40,8 @@ public class KinectAvatar : MonoBehaviour {
     private Quaternion quaternionLowPassBuffer,filteredQuaternion;
     private Quaternion nowQuaternion;
     private float dt;
+    Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
+    [SerializeField,Range(0f,1f)] private float lerpValue = 0.3f;
 
     //自分の関節とUnityちゃんのボーンを入れるよう
     [SerializeField] GameObject Ref;
@@ -78,7 +80,7 @@ public class KinectAvatar : MonoBehaviour {
     void Update () {
 
         Quaternion q;
-        Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
+        //Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
 
         string[] splitText = udpReceiver.GetrawText().Split('_');
         //受信できてないときどうなってんのか確認
@@ -134,17 +136,17 @@ public class KinectAvatar : MonoBehaviour {
             dt += Time.deltaTime * 30;
         }
 
-        Spine1.transform.rotation = Quaternion.Lerp(Spine1.transform.rotation,receiveQuaternion[0],0.5f);
-        RightArm.transform.rotation = Quaternion.Lerp(RightArm.transform.rotation,receiveQuaternion[1],0.5f);
-        RightForeArm.transform.rotation = Quaternion.Lerp(RightForeArm.transform.rotation,receiveQuaternion[2],0.5f);
-        RightHand.transform.rotation = Quaternion.Lerp(RightHand.transform.rotation,receiveQuaternion[3],0.5f);
-        LeftArm.transform.rotation = Quaternion.Lerp(LeftArm.transform.rotation,receiveQuaternion[4],0.5f);
-        LeftForeArm.transform.rotation = Quaternion.Lerp(LeftForeArm.transform.rotation,receiveQuaternion[5],0.5f);
-        LeftHand.transform.rotation = Quaternion.Lerp(LeftHand.transform.rotation,receiveQuaternion[6],0.5f);
-        RightUpLeg.transform.rotation = Quaternion.Lerp(RightUpLeg.transform.rotation,receiveQuaternion[7],0.5f);
-        RightLeg.transform.rotation = Quaternion.Lerp(RightLeg.transform.rotation,receiveQuaternion[8],0.5f);
-        LeftUpLeg.transform.rotation = Quaternion.Lerp(LeftUpLeg.transform.rotation,receiveQuaternion[9],0.5f);
-        LeftLeg.transform.rotation = Quaternion.Lerp(LeftLeg.transform.rotation,receiveQuaternion[10],0.5f);
+        Spine1.transform.rotation = Quaternion.Lerp(Spine1.transform.rotation,receiveQuaternion[0],lerpValue);
+        RightArm.transform.rotation = Quaternion.Lerp(RightArm.transform.rotation,receiveQuaternion[1],lerpValue);
+        RightForeArm.transform.rotation = Quaternion.Lerp(RightForeArm.transform.rotation,receiveQuaternion[2],lerpValue);
+        RightHand.transform.rotation = Quaternion.Lerp(RightHand.transform.rotation,receiveQuaternion[3],lerpValue);
+        LeftArm.transform.rotation = Quaternion.Lerp(LeftArm.transform.rotation,receiveQuaternion[4],lerpValue);
+        LeftForeArm.transform.rotation = Quaternion.Lerp(LeftForeArm.transform.rotation,receiveQuaternion[5],lerpValue);
+        LeftHand.transform.rotation = Quaternion.Lerp(LeftHand.transform.rotation,receiveQuaternion[6],lerpValue);
+        RightUpLeg.transform.rotation = Quaternion.Lerp(RightUpLeg.transform.rotation,receiveQuaternion[7],lerpValue);
+        RightLeg.transform.rotation = Quaternion.Lerp(RightLeg.transform.rotation,receiveQuaternion[8],lerpValue);
+        LeftUpLeg.transform.rotation = Quaternion.Lerp(LeftUpLeg.transform.rotation,receiveQuaternion[9],lerpValue);
+        LeftLeg.transform.rotation = Quaternion.Lerp(LeftLeg.transform.rotation,receiveQuaternion[10],lerpValue);
 
 
         //ローパスフィルター処理
