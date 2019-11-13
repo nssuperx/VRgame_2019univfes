@@ -44,7 +44,7 @@ public class KinectAvatar : MonoBehaviour {
     [SerializeField] GameObject RightForeArm;
     [SerializeField] GameObject RightHand;
 
-    [SerializeField] GameObject OVRCamera;
+    //[SerializeField] GameObject OVRCamera;
 
     void Start () {
         udpReceiver = GetComponent<UDPReceiver>();
@@ -70,15 +70,29 @@ public class KinectAvatar : MonoBehaviour {
 
         string[] splitText = udpReceiver.GetrawText().Split('_');
         //受信できてないときどうなってんのか確認
+        //ずっと値が入ってる
         //Debug.Log(splitText.Length);
+
+        /****************
+        めも
+        返ってくる値がstaticなのでずっと前の値が残ってる
+        それで下のif文が走る
+        それで、UDPReceiver側で値が更新されてないとき(udp.Receiveが走ってないとき)は、
+        空の文字列が返ってくるようにして、値が来てないときは下のif文が走らんようにした。
+        そしたら動きががくがくになった。（当然だけど）
+        動きと回転の更新は常に続ける必要がある。
+
+        使えそうな方法:quaternionの線形補完
+        *****************/
         
         // 関節の回転を取得する
-        if (splitText.Length > receiveQuaternionNum)
+        if (splitText.Length >= receiveQuaternionNum + 1)
         {
 
             // 回転の初期化
             //ここ試しにコメント化してみよう
             q = transform.rotation;
+            Debug.Log("unitychan" + q.ToString("f7"));
             transform.rotation = Quaternion.identity;
 
             //ここで飛んできた値を気合でパース
