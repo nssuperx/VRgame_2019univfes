@@ -77,7 +77,7 @@ public class KinectAvatar : MonoBehaviour {
         string[] splitText = udpReceiver.GetrawText().Split('_');
         //受信できてないときどうなってんのか確認
         //ずっと値が入ってる
-        //Debug.Log(splitText.Length);
+        Debug.Log(splitText[11]);
 
         /****************
         めも
