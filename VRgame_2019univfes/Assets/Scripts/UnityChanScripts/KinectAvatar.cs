@@ -16,7 +16,6 @@ public class KinectAvatar : MonoBehaviour {
     //キャリブレーションするときにつかう
     private Vector3 calibrationPos;
     private Vector3 rawPos;
-    private Vector3 fixPos;
     [SerializeField] private Transform floorPos;
     private float floorDistance;
     private float touchTime;
@@ -26,11 +25,8 @@ public class KinectAvatar : MonoBehaviour {
     //ここはposition
     Queue<Vector3> posQue = new Queue<Vector3>();
     private Vector3 lowPassBuffer,filteredPos;
-    //ここはspineのQuaternion
-    Queue<Quaternion> quaternionQue = new Queue<Quaternion>();
-    private Quaternion quaternionLowPassBuffer,filteredQuaternion;
-    private Quaternion nowQuaternion;
-    private float dt;
+
+    //unityちゃんの回転に使う
     Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
     [SerializeField,Range(0f,1f)] private float lerpValue = 0.5f;
 
@@ -56,15 +52,10 @@ public class KinectAvatar : MonoBehaviour {
         floorDistance = floorPos.localScale.y / 2 + floorPos.position.y;
 
         //カメラ　ローパスフィルター処理
-        dt = 0f;
         lowPassBuffer = new Vector3(0.0f,0.0f,0.0f);
-        quaternionLowPassBuffer = new Quaternion(0.0f,0.0f,0.0f,0.0f);
-        nowQuaternion = new Quaternion(0.0f,0.0f,0.0f,0.0f);
         filteredPos = new Vector3(0.0f,0.0f,0.0f);
-        filteredQuaternion = new Quaternion(0.0f,0.0f,0.0f,0.0f);
         for(int i=0;i<keepFrame;i++){
             posQue.Enqueue(new Vector3(0.0f,0.0f,0.0f));
-            quaternionQue.Enqueue(new Quaternion(0.0f,0.0f,0.0f,0.0f));
         }
     }
 
@@ -108,7 +99,7 @@ public class KinectAvatar : MonoBehaviour {
 
         transform.rotation = q;
 
-
+        //ここはVector3.Lerpで置き換え可能
         //ローパスフィルター処理
         lowPassBuffer -= posQue.Dequeue();
         lowPassBuffer += rawPos;
@@ -129,9 +120,8 @@ public class KinectAvatar : MonoBehaviour {
             calibrationPos = filteredPos;
             calibrationPos = new Vector3(calibrationPos.x,calibrationPos.y - floorDistance, calibrationPos.z);
         }
-        //補正後の値 = 生の値 - 補正値
-        fixPos = filteredPos - calibrationPos;
-        // モデルの位置を移動する
-        transform.position = fixPos;
+        
+        //モデルの位置を移動 補正後の値 = 生の値 - 補正値
+        transform.position = filteredPos - calibrationPos;
     }
 }
