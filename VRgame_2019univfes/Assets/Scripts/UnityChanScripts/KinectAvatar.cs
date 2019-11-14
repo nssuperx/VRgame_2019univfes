@@ -121,7 +121,8 @@ public class KinectAvatar : MonoBehaviour {
             calibrationPos = new Vector3(calibrationPos.x,calibrationPos.y - floorDistance, calibrationPos.z);
         }
         
-        //モデルの位置を移動 補正後の値 = 生の値 - 補正値
+        //モデルの位置を移動
+        //補正後の値 = 生の値 - 補正値
         transform.position = filteredPos - calibrationPos;
     }
 }
