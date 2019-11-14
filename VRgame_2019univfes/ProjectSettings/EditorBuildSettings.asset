@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/BallavoidScene.unity
-    guid: 9716d372bdf89e848b41b95094ddf057
+    path: Assets/Scenes/viewscean.unity
+    guid: 8400623f70c7c534a80e41f9845dbbb4
   m_configObjects: {}
