@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Net;
 using System.Net.Sockets;
@@ -38,7 +39,10 @@ public class UDPReceiver : MonoBehaviour
     }
 
     public string GetrawText(){
-        return rawText;
+        string receiveRawText;
+        receiveRawText = rawText;
+        rawText = "";
+        return receiveRawText;
     }
 }
 
