@@ -53,6 +53,9 @@ public class KinectAvatar : MonoBehaviour {
         //位置と回転の初期化
         lerpPos = this.transform.position;
         defaultPos = this.transform.position;
+
+        calibrationPos = new Vector3(0.0f,0.0f,0.0f);
+        calibrationPos = new Vector3(lerpPos.x,lerpPos.y - floorDistance, lerpPos.z);
         
         for(int i=0;i<receiveQuaternionNum;i++){
             receiveQuaternion[i] = Quaternion.identity;
@@ -114,12 +117,11 @@ public class KinectAvatar : MonoBehaviour {
         //補正値初期化と補正値設定をまとめてやる
         if(touchTime > 2.0f){
             calibrationPos = new Vector3(0.0f,0.0f,0.0f);
-            calibrationPos = lerpPos;
-            calibrationPos = new Vector3(calibrationPos.x,calibrationPos.y - floorDistance, calibrationPos.z);
+            calibrationPos = new Vector3(lerpPos.x,lerpPos.y - floorDistance, lerpPos.z);
         }
         
         //モデルの位置を移動
-        //補正後の値 = 位置補間後の値 - 補正値
+        //補正後の値 = 位置補間後の値 - 補正値 + 初期位置
         transform.position = lerpPos - calibrationPos + defaultPos;
     }
 }
