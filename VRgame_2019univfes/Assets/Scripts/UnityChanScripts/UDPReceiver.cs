@@ -39,7 +39,10 @@ public class UDPReceiver : MonoBehaviour
     }
 
     public string GetrawText(){
-        return rawText;
+        string receiveRawText;
+        receiveRawText = rawText;
+        rawText = "";
+        return receiveRawText;
     }
 }
 
