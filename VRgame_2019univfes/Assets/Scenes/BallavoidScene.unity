@@ -460,6 +460,11 @@ PrefabInstance:
       propertyPath: floorPos
       value: 
       objectReference: {fileID: 414186943}
+    - target: {fileID: 831137333166795447, guid: 300822ff4117c344b8ec14f44c0722a4,
+        type: 3}
+      propertyPath: quatLerpRate
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 831137332515524870, guid: 300822ff4117c344b8ec14f44c0722a4,
         type: 3}
       propertyPath: m_Layer

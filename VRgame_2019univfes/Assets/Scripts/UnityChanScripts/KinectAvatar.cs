@@ -20,15 +20,11 @@ public class KinectAvatar : MonoBehaviour {
     private float floorDistance;
     private float touchTime;
 
-    //カメラ　ローパスフィルターもどき
-    [SerializeField] private const int keepFrame = 10;
-    //ここはposition
-    Queue<Vector3> posQue = new Queue<Vector3>();
-    private Vector3 lowPassBuffer,filteredPos;
+    //unityちゃんの移動の補間に使う
     private Vector3 lerpPos;
     [SerializeField,Range(0f,1f)] private float posLerpRate = 0.4f;
 
-    //unityちゃんの回転に使う
+    //unityちゃんの回転と補間に使う
     Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
     [SerializeField,Range(0f,1f)] private float quatLerpRate = 0.4f;
 
@@ -53,12 +49,10 @@ public class KinectAvatar : MonoBehaviour {
         touchTime = 0.0f;
         floorDistance = floorPos.localScale.y / 2 + floorPos.position.y;
 
-        //カメラ　ローパスフィルター処理
-        lowPassBuffer = new Vector3(0.0f,0.0f,0.0f);
-        filteredPos = new Vector3(0.0f,0.0f,0.0f);
+        //位置と回転の初期化
         lerpPos = new Vector3(0.0f,0.0f,0.0f);
-        for(int i=0;i<keepFrame;i++){
-            posQue.Enqueue(new Vector3(0.0f,0.0f,0.0f));
+        for(int i=0;i<receiveQuaternionNum;i++){
+            receiveQuaternion[i] = Quaternion.identity;
         }
     }
 
@@ -88,6 +82,7 @@ public class KinectAvatar : MonoBehaviour {
         q = transform.rotation;
         transform.rotation = Quaternion.identity; 
 
+        //回転の補間（ほんとは時間とって均等にやらないといけない）
         Spine1.transform.rotation = Quaternion.Lerp(Spine1.transform.rotation,receiveQuaternion[0],0.1f);
         RightArm.transform.rotation = Quaternion.Lerp(RightArm.transform.rotation,receiveQuaternion[1],quatLerpRate);
         RightForeArm.transform.rotation = Quaternion.Lerp(RightForeArm.transform.rotation,receiveQuaternion[2],quatLerpRate);
@@ -102,14 +97,8 @@ public class KinectAvatar : MonoBehaviour {
 
         transform.rotation = q;
 
-        //ここはVector3.Lerpで置き換え可能
-        //ローパスフィルター処理
-        lowPassBuffer -= posQue.Dequeue();
-        lowPassBuffer += rawPos;
-        posQue.Enqueue(rawPos);
-        filteredPos = lowPassBuffer / (float)keepFrame;
+        //位置の補間（がくがくしないように）
         lerpPos = Vector3.Lerp(lerpPos,rawPos,posLerpRate);
-
 
         //キャリブレーション関連
         if(OVRInput.Get(OVRInput.Button.PrimaryTouchpad) || Input.GetMouseButton(1)){
@@ -120,17 +109,14 @@ public class KinectAvatar : MonoBehaviour {
 
         //kinectの初期値をとっとく
         //補正値初期化と補正値設定をまとめてやる
-        //ここもっときれいに書ける
         if(touchTime > 2.0f){
             calibrationPos = new Vector3(0.0f,0.0f,0.0f);
-            calibrationPos = filteredPos;
             calibrationPos = lerpPos;
             calibrationPos = new Vector3(calibrationPos.x,calibrationPos.y - floorDistance, calibrationPos.z);
         }
         
         //モデルの位置を移動
-        //補正後の値 = 生の値 - 補正値
-        //transform.position = filteredPos - calibrationPos;
+        //補正後の値 = 位置補間後の値 - 補正値
         transform.position = lerpPos - calibrationPos;
     }
 }
