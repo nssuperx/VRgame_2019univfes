@@ -25,10 +25,12 @@ public class KinectAvatar : MonoBehaviour {
     //ここはposition
     Queue<Vector3> posQue = new Queue<Vector3>();
     private Vector3 lowPassBuffer,filteredPos;
+    private Vector3 lerpPos;
+    [SerializeField,Range(0f,1f)] private float posLerpRate = 0.4f;
 
     //unityちゃんの回転に使う
     Quaternion[] receiveQuaternion = new Quaternion[receiveQuaternionNum];
-    [SerializeField,Range(0f,1f)] private float lerpValue = 0.5f;
+    [SerializeField,Range(0f,1f)] private float quatLerpRate = 0.4f;
 
     //自分の関節とUnityちゃんのボーンを入れるよう
     [SerializeField] GameObject Ref;
@@ -54,6 +56,7 @@ public class KinectAvatar : MonoBehaviour {
         //カメラ　ローパスフィルター処理
         lowPassBuffer = new Vector3(0.0f,0.0f,0.0f);
         filteredPos = new Vector3(0.0f,0.0f,0.0f);
+        lerpPos = new Vector3(0.0f,0.0f,0.0f);
         for(int i=0;i<keepFrame;i++){
             posQue.Enqueue(new Vector3(0.0f,0.0f,0.0f));
         }
@@ -86,16 +89,16 @@ public class KinectAvatar : MonoBehaviour {
         transform.rotation = Quaternion.identity; 
 
         Spine1.transform.rotation = Quaternion.Lerp(Spine1.transform.rotation,receiveQuaternion[0],0.1f);
-        RightArm.transform.rotation = Quaternion.Lerp(RightArm.transform.rotation,receiveQuaternion[1],lerpValue);
-        RightForeArm.transform.rotation = Quaternion.Lerp(RightForeArm.transform.rotation,receiveQuaternion[2],lerpValue);
-        RightHand.transform.rotation = Quaternion.Lerp(RightHand.transform.rotation,receiveQuaternion[3],lerpValue);
-        LeftArm.transform.rotation = Quaternion.Lerp(LeftArm.transform.rotation,receiveQuaternion[4],lerpValue);
-        LeftForeArm.transform.rotation = Quaternion.Lerp(LeftForeArm.transform.rotation,receiveQuaternion[5],lerpValue);
-        LeftHand.transform.rotation = Quaternion.Lerp(LeftHand.transform.rotation,receiveQuaternion[6],lerpValue);
-        RightUpLeg.transform.rotation = Quaternion.Lerp(RightUpLeg.transform.rotation,receiveQuaternion[7],lerpValue);
-        RightLeg.transform.rotation = Quaternion.Lerp(RightLeg.transform.rotation,receiveQuaternion[8],lerpValue);
-        LeftUpLeg.transform.rotation = Quaternion.Lerp(LeftUpLeg.transform.rotation,receiveQuaternion[9],lerpValue);
-        LeftLeg.transform.rotation = Quaternion.Lerp(LeftLeg.transform.rotation,receiveQuaternion[10],lerpValue);
+        RightArm.transform.rotation = Quaternion.Lerp(RightArm.transform.rotation,receiveQuaternion[1],quatLerpRate);
+        RightForeArm.transform.rotation = Quaternion.Lerp(RightForeArm.transform.rotation,receiveQuaternion[2],quatLerpRate);
+        RightHand.transform.rotation = Quaternion.Lerp(RightHand.transform.rotation,receiveQuaternion[3],quatLerpRate);
+        LeftArm.transform.rotation = Quaternion.Lerp(LeftArm.transform.rotation,receiveQuaternion[4],quatLerpRate);
+        LeftForeArm.transform.rotation = Quaternion.Lerp(LeftForeArm.transform.rotation,receiveQuaternion[5],quatLerpRate);
+        LeftHand.transform.rotation = Quaternion.Lerp(LeftHand.transform.rotation,receiveQuaternion[6],quatLerpRate);
+        RightUpLeg.transform.rotation = Quaternion.Lerp(RightUpLeg.transform.rotation,receiveQuaternion[7],quatLerpRate);
+        RightLeg.transform.rotation = Quaternion.Lerp(RightLeg.transform.rotation,receiveQuaternion[8],quatLerpRate);
+        LeftUpLeg.transform.rotation = Quaternion.Lerp(LeftUpLeg.transform.rotation,receiveQuaternion[9],quatLerpRate);
+        LeftLeg.transform.rotation = Quaternion.Lerp(LeftLeg.transform.rotation,receiveQuaternion[10],quatLerpRate);
 
         transform.rotation = q;
 
@@ -105,6 +108,8 @@ public class KinectAvatar : MonoBehaviour {
         lowPassBuffer += rawPos;
         posQue.Enqueue(rawPos);
         filteredPos = lowPassBuffer / (float)keepFrame;
+        lerpPos = Vector3.Lerp(lerpPos,rawPos,posLerpRate);
+
 
         //キャリブレーション関連
         if(OVRInput.Get(OVRInput.Button.PrimaryTouchpad) || Input.GetMouseButton(1)){
@@ -115,14 +120,17 @@ public class KinectAvatar : MonoBehaviour {
 
         //kinectの初期値をとっとく
         //補正値初期化と補正値設定をまとめてやる
+        //ここもっときれいに書ける
         if(touchTime > 2.0f){
             calibrationPos = new Vector3(0.0f,0.0f,0.0f);
             calibrationPos = filteredPos;
+            calibrationPos = lerpPos;
             calibrationPos = new Vector3(calibrationPos.x,calibrationPos.y - floorDistance, calibrationPos.z);
         }
         
         //モデルの位置を移動
         //補正後の値 = 生の値 - 補正値
-        transform.position = filteredPos - calibrationPos;
+        //transform.position = filteredPos - calibrationPos;
+        transform.position = lerpPos - calibrationPos;
     }
 }
