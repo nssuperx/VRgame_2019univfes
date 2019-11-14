@@ -22,6 +22,7 @@ public class KinectAvatar : MonoBehaviour {
 
     //unityちゃんの移動の補間に使う
     private Vector3 lerpPos;
+    private Vector3 defaultPos;
     [SerializeField,Range(0f,1f)] private float posLerpRate = 0.4f;
 
     //unityちゃんの回転と補間に使う
@@ -50,7 +51,9 @@ public class KinectAvatar : MonoBehaviour {
         floorDistance = floorPos.localScale.y / 2 + floorPos.position.y;
 
         //位置と回転の初期化
-        lerpPos = new Vector3(0.0f,0.0f,0.0f);
+        lerpPos = this.transform.position;
+        defaultPos = this.transform.position;
+        
         for(int i=0;i<receiveQuaternionNum;i++){
             receiveQuaternion[i] = Quaternion.identity;
         }
@@ -98,7 +101,7 @@ public class KinectAvatar : MonoBehaviour {
         transform.rotation = q;
 
         //位置の補間（がくがくしないように）
-        lerpPos = Vector3.Lerp(lerpPos,rawPos,posLerpRate);
+        lerpPos = Vector3.Lerp(lerpPos,rawPos + defaultPos,posLerpRate);
 
         //キャリブレーション関連
         if(OVRInput.Get(OVRInput.Button.PrimaryTouchpad) || Input.GetMouseButton(1)){
@@ -117,6 +120,6 @@ public class KinectAvatar : MonoBehaviour {
         
         //モデルの位置を移動
         //補正後の値 = 位置補間後の値 - 補正値
-        transform.position = lerpPos - calibrationPos;
+        transform.position = lerpPos - calibrationPos + defaultPos;
     }
 }
