@@ -13,7 +13,7 @@ using System.Threading;
 これは送信側のクラス
 **********************************/
 
-public class KinectAvatar : MonoBehaviour {
+public class KinectSend : MonoBehaviour {
 
     //UDP通信
     [SerializeField] private string ipaddress = "localhost";
